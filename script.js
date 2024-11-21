@@ -72,3 +72,48 @@ function fetchWeather() {
             document.getElementById('clima').innerHTML = '<p>Erro ao carregar os dados do clima.</p>';
         });
 }*/
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('https://apisite-ml87.onrender.com/estacoes')
+        .then(response => response.json())
+        .then(data => {
+            const estacoesContainer = document.getElementById('estacoes-container');
+            estacoesContainer.innerHTML = ''; // Limpar o conteúdo anterior
+            data.forEach(estacao => {
+                const estacaoCard = document.createElement('div');
+                estacaoCard.classList.add('card');
+                estacaoCard.innerHTML = `
+                    <h2>${estacao.nome}</h2>
+                    <p><strong>Cidade:</strong> ${estacao.cidade}</p>
+                    <p><strong>Estado:</strong> ${estacao.estado}</p>
+                    <button onclick="mostrarLeituras(${estacao.id})">Ver Leituras</button>
+                    <div id="leituras-${estacao.id}" style="display: none;"></div>
+                `;
+                estacoesContainer.appendChild(estacaoCard);
+            });
+        })
+        .catch(error => console.error('Erro ao carregar estações:', error));
+});
+
+function mostrarLeituras(estacaoId) {
+    const leiturasDiv = document.getElementById(`leituras-${estacaoId}`);
+    if (leiturasDiv.style.display === 'none' || leiturasDiv.style.display === '') {
+        fetch(`https://apisite-ml87.onrender.com/leituras/${estacaoId}`)
+            .then(response => response.json())
+            .then(leituras => {
+                leiturasDiv.innerHTML = ''; // Limpar as leituras anteriores
+                leituras.forEach(leitura => {
+                    const leituraItem = document.createElement('div');
+                    leituraItem.innerHTML = `
+                        <p><strong>Data:</strong> ${new Date(leitura.data).toLocaleString()}</p>
+                        <p><strong>Nível de Água:</strong> ${leitura.nivel} m</p>
+                        <p><strong>Distância:</strong> ${leitura.distancia_ultrassonico} cm</p>
+                    `;
+                    leiturasDiv.appendChild(leituraItem);
+                });
+                leiturasDiv.style.display = 'block'; // Mostrar as leituras
+            })
+            .catch(error => console.error('Erro ao carregar leituras:', error));
+    } else {
+        leiturasDiv.style.display = 'none'; // Esconder as leituras
+    }
+}
