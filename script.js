@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://localhost:8000/estacoes')
+    fetch('http://apisite-ml87.onrender.com/estacoes')
         .then(response => response.json())
         .then(data => {
             const estacoesContainer = document.getElementById('estacoes-container');
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function mostrarLeituras(estacaoId) {
     const leiturasDiv = document.getElementById(`leituras-${estacaoId}`);
     if (leiturasDiv.style.display === 'none' || leiturasDiv.style.display === '') {
-        fetch(`http://localhost:8000/leituras/${estacaoId}`)
+        fetch(`http://apisite-ml87.onrender.com/leituras/${estacaoId}`)
             .then(response => response.json())
             .then(leituras => {
                 leiturasDiv.innerHTML = '';
