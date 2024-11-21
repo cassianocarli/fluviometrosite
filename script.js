@@ -47,7 +47,7 @@ function mostrarLeituras(estacaoId) {
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
 }
-
+/*
 // Função para buscar dados do clima da cidade inserida
 function fetchWeather() {
     const cidade = document.getElementById('cidade-input').value;
@@ -71,4 +71,4 @@ function fetchWeather() {
             console.error('Erro ao buscar os dados do clima:', error);
             document.getElementById('clima').innerHTML = '<p>Erro ao carregar os dados do clima.</p>';
         });
-}
+}*/
