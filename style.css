@@ -1,0 +1,169 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f0f0;
+    color: #333;
+    margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0078d4;
+    color: white;
+    padding: 10px 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-container input {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-container button {
+    padding: 10px;
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background: #005bb5;
+}
+
+#estacoes-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin: 0 0 10px;
+}
+
+#clima-card {
+    width: 80%; /* Card maior */
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    border-radius: 10px;
+}
+
+.weather-search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.weather-search input {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.weather-search button {
+    padding: 10px;
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.weather-search button:hover {
+    background: #005bb5;
+}
+
+footer {
+    background: #0078d4;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Estilos para o modo escuro */
+.dark-theme {
+    background-color: #333;
+    color: #eee;
+}
+
+.dark-theme header {
+    background: #444;
+}
+
+.dark-theme footer {
+    background: #444;
+}
+
+.dark-theme .card {
+    background: #555;
+    border-color: #777;
+}
+
+#theme-toggle {
+    position: absolute;
+    top: 10px; /* Distância do topo */
+    right: 20px; /* Distância da borda direita */
+    padding: 10px 15px;
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+#theme-toggle:hover {
+    background: #005bb5;
+}

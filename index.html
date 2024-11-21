@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluviômetro Digital</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <h1>Fluviômetro Digital</h1>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Botão de Modo Escuro -->
+        <button id="theme-toggle" onclick="toggleTheme()">🌙 Modo Escuro</button>
+
+        <!-- Caixa de pesquisa das estações -->
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Pesquisar estação">
+            <button onclick="searchEstacao()">Pesquisar</button>
+        </div>
+
+        <!-- Contêiner para as estações -->
+        <div id="estacoes-container"></div>
+
+        <!-- Card para mostrar as informações do clima -->
+        <div class="card" id="clima-card">
+            <h2>Informações do Clima</h2>
+            <div class="weather-search">
+                <input type="text" id="cidade-input" placeholder="Digite uma cidade">
+                <button onclick="fetchWeather()">Buscar Clima</button>
+            </div>
+            <div id="clima">
+                <!-- Informações do clima serão exibidas aqui -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Desenvolvido por [Seu Nome]</p>
+        <p>Contato: seuemail@example.com</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
