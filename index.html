@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fluviômetro Digital</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
@@ -27,22 +28,16 @@
         <!-- Contêiner para as estações -->
         <div id="estacoes-container"></div>
 
-        <!-- Card para mostrar as informações do clima -->
-        <div class="card" id="clima-card">
-            <h2>Informações do Clima</h2>
-            <div class="weather-search">
-                <input type="text" id="cidade-input" placeholder="Digite uma cidade">
-                <button onclick="fetchWeather()">Buscar Clima</button>
-            </div>
-            <div id="clima">
-                <!-- Informações do clima serão exibidas aqui -->
-            </div>
+        <!-- Gráfico -->
+        <div class="card">
+            <h2>Gráfico de Leituras</h2>
+            <canvas id="leiturasChart"></canvas>
         </div>
     </main>
 
     <footer>
         <p>Desenvolvido por </p>
-        <p>Contato: seuemail@example.com</p>
+        <p>Contato: cassiano3241@gmail.com</p>
     </footer>
 
     <script src="script.js"></script>
