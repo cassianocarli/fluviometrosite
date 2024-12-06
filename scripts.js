@@ -97,26 +97,56 @@ async function fetchLastDistance() {
     }
 }
 
-// Função para renderizar a última distância
+// Função para renderizar as últimas distâncias
 function renderLastDistance(data) {
+    // Verificando se o elemento distanceResult existe
     if (!distanceResult) {
         console.error('Elemento com id "distanceResult" não encontrado!');
         return;
     }
+
+    // Verificando os valores de created_at
+    console.log('created_at recebido:', data.created_at);
     
-    const card = document.createElement('div');
-    card.className = 'card shadow-sm mt-4'; // Estilo do card
-    card.innerHTML = `
+    // Criando o objeto Date a partir do created_at (ISO string)
+    const createdAtDate = new Date(data.created_at);
+    if (isNaN(createdAtDate)) {
+        console.error('Data criada inválida:', data.created_at);
+        return;  // Não renderiza nada se a data for inválida
+    }
+    console.log('Data convertida de created_at:', createdAtDate);
+
+    // Criando os dois cards (um para cada distância)
+    const localDistanceCard = document.createElement('div');
+    localDistanceCard.className = 'card shadow-sm mt-4'; // Estilo do card para a distância local
+    localDistanceCard.innerHTML = `
         <div class="card-body text-center text-md-start">
-            <h5 class="card-title">Última Distância Registrada</h5>
+            <h5 class="card-title">Última Distância Local Registrada</h5>
             <p class="card-text">
                 <strong>Distância Local:</strong> ${data.local_distance} m<br>
-                <strong>Distância Remota:</strong> ${data.remote_distance} m<br>
-                <strong>Data e Hora:</strong> ${new Date(data.timestamp).toLocaleString()}
+                <strong>Data e Hora:</strong> ${createdAtDate.toLocaleString('pt-BR')}
             </p>
         </div>
     `;
-    distanceResult.appendChild(card);  // Adiciona o card ao div de distâncias
+
+    const remoteDistanceCard = document.createElement('div');
+    remoteDistanceCard.className = 'card shadow-sm mt-4'; // Estilo do card para a distância remota
+    remoteDistanceCard.innerHTML = `
+        <div class="card-body text-center text-md-start">
+            <h5 class="card-title">Última Distância Remota Registrada</h5>
+            <p class="card-text">
+                <strong>Distância Remota:</strong> ${data.remote_distance} m<br>
+                <strong>Data e Hora:</strong> ${createdAtDate.toLocaleString('pt-BR')}
+            </p>
+        </div>
+    `;
+
+    // Adicionando os dois cards ao elemento de distâncias
+    distanceResult.appendChild(localDistanceCard);
+    distanceResult.appendChild(remoteDistanceCard);
+
+    // Verificando se os cards foram inseridos corretamente
+    console.log('Cards inseridos com sucesso!');
 }
 
 // Chamar a função para buscar a última distância ao carregar a página
