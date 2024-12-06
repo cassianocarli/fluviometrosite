@@ -1,85 +1,123 @@
-// Função para buscar as distâncias do servidor Node.js
-async function fetchDistances() {
-    try {
-        // Fazendo a requisição para a API de distâncias
-        const response = await fetch('http://localhost:3000/api/distances');
-        const data = await response.json();
+const apiKey = '4ae759041f16634f4c85c65114152892'; // Substitua por sua chave da OpenWeather API
 
-        // Verificando se há dados para preencher
-        if (data.length > 0) {
-            // Atualiza o card1 com a distância local
-            document.getElementById('card1').innerHTML = `
-                <div class="card-body text-center">
-                    <h5 class="card-title">Distância Local</h5>
-                    <p class="card-text">${data[0].local_distance} km</p>
-                </div>
-            `;
-            // Atualiza o card2 com a distância remota
-            document.getElementById('card2').innerHTML = `
-                <div class="card-body text-center">
-                    <h5 class="card-title">Distância Remota</h5>
-                    <p class="card-text">${data[0].remote_distance} km</p>
-                </div>
-            `;
-        } else {
-            // Caso não haja dados
-            document.getElementById('card1').innerHTML = `
-                <div class="card-body text-center">
-                    <h5 class="card-title">Distância Local</h5>
-                    <p class="card-text">Nenhum dado encontrado.</p>
-                </div>
-            `;
-            document.getElementById('card2').innerHTML = `
-                <div class="card-body text-center">
-                    <h5 class="card-title">Distância Remota</h5>
-                    <p class="card-text">Nenhum dado encontrado.</p>
-                </div>
-            `;
-        }
-    } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-    }
-}
+// Elementos DOM
+const weatherForm = document.getElementById('weatherForm');
+const weatherResult = document.getElementById('weatherResult');
+const forecastResult = document.getElementById('forecastResult');
+const themeToggle = document.getElementById('themeToggle');
+const distanceResult = document.getElementById('distanceResult'); // Adicionado para renderizar a distância
 
-// Função de busca de clima da cidade (já existente)
-document.getElementById('weatherForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const city = document.getElementById('cityInput').value;
-    fetchWeather(city);
-    fetchDistances();  // Atualiza os cards de distâncias sempre que buscar o clima
+// Alternar tema claro/escuro
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    themeToggle.textContent = document.body.classList.contains('dark') ? 'Modo Claro' : 'Modo Escuro';
 });
 
-// Função de busca do clima (exemplo simples)
-async function fetchWeather(city) {
-    // A API de clima (OpenWeather) já foi configurada antes, vamos apenas chamar ela aqui.
-    const apiKey = '4ae759041f16634f4c85c65114152892'; // Substitua pela sua chave da OpenWeather
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=pt_br`;
-    
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
+// Buscar clima por cidade
+weatherForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const city = document.getElementById('cityInput').value.trim();
+    if (city) {
+        fetchWeather(city);
+        fetchForecast(city);
+    }
+});
 
-        if (data.cod === 200) {
-            // Exibe os dados de clima (temperatura, etc.) no card de clima
-            document.getElementById('weatherResult').innerHTML = `
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">${data.name}</h5>
-                        <p class="card-text">Temperatura: ${data.main.temp}°C</p>
-                        <p class="card-text">Clima: ${data.weather[0].description}</p>
-                        <p class="card-text">Humidade: ${data.main.humidity}%</p>
-                    </div>
-                </div>
-            `;
-        } else {
-            document.getElementById('weatherResult').innerHTML = `
-                <div class="alert alert-danger">Cidade não encontrada.</div>
-            `;
-        }
+// Função para buscar clima
+async function fetchWeather(city) {
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=pt_br&appid=${apiKey}`);
+        const data = await response.json();
+        renderWeather(data);
     } catch (error) {
-        console.error('Erro ao buscar clima:', error);
+        weatherResult.innerHTML = `<div class="alert alert-danger">Cidade não encontrada!</div>`;
     }
 }
 
-// Chama a função para carregar as distâncias ao carregar a página
-document.addEventListener('DOMContentLoaded', fetchDistances);
+// Função para buscar previsão
+async function fetchForecast(city) {
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&lang=pt_br&appid=${apiKey}`);
+        const data = await response.json();
+        renderForecast(data);
+    } catch (error) {
+        forecastResult.innerHTML = `<div class="alert alert-danger">Erro ao carregar previsão!</div>`;
+    }
+}
+
+// Renderizar clima
+function renderWeather(data) {
+    weatherResult.innerHTML = `
+        <div class="card shadow-sm">
+            <div class="card-body text-center text-md-start">
+                <h5 class="card-title">${data.name}, ${data.sys.country}</h5>
+                <p class="card-text">
+                    <strong>Temperatura:</strong> ${data.main.temp}°C<br>
+                    <strong>Clima:</strong> ${data.weather[0].description}<br>
+                    <strong>Umidade:</strong> ${data.main.humidity}%<br>
+                    <strong>Vento:</strong> ${data.wind.speed} m/s
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+// Renderizar previsão
+function renderForecast(data) {
+    forecastResult.innerHTML = `
+        <h5 class="w-100 mb-3">Previsão para os próximos 5 dias:</h5>
+    `;
+    forecastResult.innerHTML += data.list
+        .filter((_, index) => index % 8 === 0)
+        .map(item => `
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6>${new Date(item.dt_txt).toLocaleDateString()}</h6>
+                    <p>${item.main.temp}°C</p>
+                    <p>${item.weather[0].description}</p>
+                </div>
+            </div>
+        `).join('');
+}
+
+// Função para buscar a última distância
+async function fetchLastDistance() {
+    try {
+        const response = await fetch('https://apisite-30f6.onrender.com/api/last-distance'); // URL da sua API
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error); // Tratar erro da API se houver
+        }
+
+        renderLastDistance(data);
+    } catch (error) {
+        console.error('Erro ao buscar a última distância:', error);
+        distanceResult.innerHTML = '<div class="alert alert-danger">Erro ao buscar dados da distância.</div>';
+    }
+}
+
+// Função para renderizar a última distância
+function renderLastDistance(data) {
+    if (!distanceResult) {
+        console.error('Elemento com id "distanceResult" não encontrado!');
+        return;
+    }
+    
+    const card = document.createElement('div');
+    card.className = 'card shadow-sm mt-4'; // Estilo do card
+    card.innerHTML = `
+        <div class="card-body text-center text-md-start">
+            <h5 class="card-title">Última Distância Registrada</h5>
+            <p class="card-text">
+                <strong>Distância Local:</strong> ${data.local_distance} m<br>
+                <strong>Distância Remota:</strong> ${data.remote_distance} m<br>
+                <strong>Data e Hora:</strong> ${new Date(data.timestamp).toLocaleString()}
+            </p>
+        </div>
+    `;
+    distanceResult.appendChild(card);  // Adiciona o card ao div de distâncias
+}
+
+// Chamar a função para buscar a última distância ao carregar a página
+fetchLastDistance();
