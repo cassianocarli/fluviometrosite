@@ -109,16 +109,15 @@ function renderLastDistance(data) {
         return;
     }
 
-    // Verificando os valores de created_at
-    console.log('created_at recebido:', data.created_at);
-    
     // Criando o objeto Date a partir do created_at (ISO string)
     const createdAtDate = new Date(data.created_at);
     if (isNaN(createdAtDate)) {
         console.error('Data criada inválida:', data.created_at);
         return;  // Não renderiza nada se a data for inválida
     }
-    console.log('Data convertida de created_at:', createdAtDate);
+
+    // Adicionar 3 horas à data
+    createdAtDate.setHours(createdAtDate.getHours() + 3);
 
     // Limpar o conteúdo existente antes de adicionar novos cards
     distanceResult.innerHTML = '';
@@ -153,20 +152,19 @@ function renderLastDistance(data) {
     distanceResult.appendChild(remoteDistanceCard);
 
     // Atualizando os gráficos com as novas distâncias
-    updateDistanceCharts(data.local_distance, data.remote_distance);
-
-    // Verificando se os cards foram inseridos corretamente
-    console.log('Cards inseridos com sucesso!');
+    updateDistanceCharts(data.local_distance, data.remote_distance, createdAtDate);
 }
 
 // Função para atualizar os gráficos
-function updateDistanceCharts(localDistance, remoteDistance) {
+function updateDistanceCharts(localDistance, remoteDistance, createdAtDate) {
+    const formattedDate = createdAtDate.toLocaleString('pt-BR'); // Formatar data e hora
+
     // Se os gráficos ainda não foram inicializados, inicialize-os
     if (!localDistanceChart) {
         localDistanceChart = new Chart(document.getElementById('localDistanceChart'), {
             type: 'line', // Gráfico de linha
             data: {
-                labels: ['Agora'], // Iniciar com uma única label
+                labels: [formattedDate], // Usar data e hora como label
                 datasets: [{
                     label: 'Distância Local',
                     data: [localDistance],
@@ -177,15 +175,26 @@ function updateDistanceCharts(localDistance, remoteDistance) {
             options: {
                 responsive: true,
                 scales: {
+                    x: {
+                        type: 'category', // Usar categorias para as datas
+                        title: {
+                            display: true,
+                            text: 'Data e Hora'
+                        }
+                    },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Distância (m)'
+                        }
                     }
                 }
             }
         });
     } else {
-        localDistanceChart.data.labels.push('Agora');
-        localDistanceChart.data.datasets[0].data.push(localDistance);
+        localDistanceChart.data.labels.push(formattedDate); // Adicionar nova data
+        localDistanceChart.data.datasets[0].data.push(localDistance); // Adicionar nova distância
         localDistanceChart.update();
     }
 
@@ -193,7 +202,7 @@ function updateDistanceCharts(localDistance, remoteDistance) {
         remoteDistanceChart = new Chart(document.getElementById('remoteDistanceChart'), {
             type: 'line',
             data: {
-                labels: ['Agora'],
+                labels: [formattedDate],
                 datasets: [{
                     label: 'Distância Remota',
                     data: [remoteDistance],
@@ -204,15 +213,26 @@ function updateDistanceCharts(localDistance, remoteDistance) {
             options: {
                 responsive: true,
                 scales: {
+                    x: {
+                        type: 'category',
+                        title: {
+                            display: true,
+                            text: 'Data e Hora'
+                        }
+                    },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Distância (m)'
+                        }
                     }
                 }
             }
         });
     } else {
-        remoteDistanceChart.data.labels.push('Agora');
-        remoteDistanceChart.data.datasets[0].data.push(remoteDistance);
+        remoteDistanceChart.data.labels.push(formattedDate); // Adicionar nova data
+        remoteDistanceChart.data.datasets[0].data.push(remoteDistance); // Adicionar nova distância
         remoteDistanceChart.update();
     }
 }
