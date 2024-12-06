@@ -3,47 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluviômetro Digital</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Weather App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <h1>Fluviômetro Digital</h1>
+    <!-- Header -->
+    <header class="bg-primary text-white py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <h1 class="h3 m-0 d-flex align-items-center">
+                <img src="https://via.placeholder.com/50" alt="Logo" class="me-2 img-fluid" style="max-height: 50px;"> 
+                Weather App
+            </h1>
+            <button id="themeToggle" class="btn btn-light">Modo Escuro</button>
         </div>
     </header>
-    
-    <main>
-        <!-- Botão de Modo Escuro -->
-        <button id="theme-toggle" onclick="toggleTheme()">🌙 Modo Escuro</button>
 
-        <!-- Caixa de pesquisa das estações -->
-        <div class="search-container">
-            <input type="text" id="search" placeholder="Pesquisar estação">
-            <button onclick="searchEstacao()">Pesquisar</button>
+    <!-- Main Content -->
+    <main class="container my-5">
+        <h2 class="mb-4 text-center text-md-start">Buscar Clima por Cidade</h2>
+
+        <!-- Search Bar -->
+        <form id="weatherForm" class="row g-2">
+            <div class="col-12 col-md-9">
+                <input id="cityInput" type="text" class="form-control" placeholder="Digite o nome da cidade" required>
+            </div>
+            <div class="col-12 col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
+
+        <!-- Weather Results -->
+        <div class="row mt-4">
+            <!-- Weather Info -->
+            <div id="weatherResult" class="col-12 col-md-4">
+                <!-- Informações da cidade principal serão exibidas aqui -->
+            </div>
+            <!-- Forecast Info -->
+            <div id="forecastResult" class="col-12 col-md-8 d-flex flex-wrap justify-content-md-start">
+                <!-- Previsão de 5 dias será exibida aqui -->
+            </div>
         </div>
 
-        <!-- Contêiner para as estações -->
-        <div id="estacoes-container"></div>
-
-        <!-- Card para mostrar as informações do clima -->
-        <div class="card" id="clima-card">
-            <h2>Informações do Clima</h2>
-            <div class="weather-search">
-                <input type="text" id="cidade-input" placeholder="Digite uma cidade">
-                <button onclick="fetchWeather()">Buscar Clima</button>
+        <!-- Distances Info -->
+        <div class="row mt-5">
+            <!-- Card for Local Distance -->
+            <div class="col-12 col-md-6">
+                <div id="card1" class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Distância Local</h5>
+                        <p class="card-text">Aguardando dados...</p>
+                    </div>
+                </div>
             </div>
-            <div id="clima">
-                <!-- Informações do clima serão exibidas aqui -->
+            <!-- Card for Remote Distance -->
+            <div class="col-12 col-md-6">
+                <div id="card2" class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Distância Remota</h5>
+                        <p class="card-text">Aguardando dados...</p>
+                    </div>
+                </div>
             </div>
         </div>
+
     </main>
+    
 
-    <footer>
-        <p>Desenvolvido por </p>
-        <p>Contato: cassiano3241@gmail.com</p>
-    </footer>
-
-    <script src="script.js"></script>
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="scripts.js"></script>
 </body>
 </html>

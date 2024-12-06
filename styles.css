@@ -1,0 +1,53 @@
+/* Header */
+header {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Layout dos Resultados */
+.row {
+    align-items: center; /* Alinha os elementos verticalmente ao centro */
+}
+
+/* Card Clima Principal */
+#weatherResult {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Card Clima */
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Previsão */
+#forecastResult .card {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    flex: 1 1 calc(33.333% - 10px); /* Responsividade */
+}
+
+/* Tema Claro/Escuro */
+body.dark {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark .bg-primary {
+    background-color: #1f1f1f !important;
+}
+
+body.dark .btn-light {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+body.dark .card {
+    background-color: #222222;
+    color: #ffffff;
+}
