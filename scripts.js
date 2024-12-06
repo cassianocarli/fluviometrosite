@@ -84,7 +84,7 @@ function renderForecast(data) {
         `).join('');
 }
 
-// Função para buscar as últimas distâncias
+// Função para buscar a última distância
 async function fetchLastDistance() {
     try {
         const response = await fetch('https://apisite-30f6.onrender.com/api/last-distance'); // URL da sua API
@@ -94,10 +94,10 @@ async function fetchLastDistance() {
             throw new Error(data.error); // Tratar erro da API se houver
         }
 
-        renderLastDistance(data); // Passando um array de distâncias
+        renderLastDistance(data);
     } catch (error) {
-        console.error('Erro ao buscar as distâncias:', error);
-        distanceResult.innerHTML = '<div class="alert alert-danger">Erro ao buscar dados das distâncias.</div>';
+        console.error('Erro ao buscar a última distância:', error);
+        distanceResult.innerHTML = '<div class="alert alert-danger">Erro ao buscar dados da distância.</div>';
     }
 }
 
@@ -109,52 +109,51 @@ function renderLastDistance(data) {
         return;
     }
 
+    // Verificando os valores de created_at
+    console.log('created_at recebido:', data.created_at);
+    
+    // Criando o objeto Date a partir do created_at (ISO string)
+    const createdAtDate = new Date(data.created_at);
+    if (isNaN(createdAtDate)) {
+        console.error('Data criada inválida:', data.created_at);
+        return;  // Não renderiza nada se a data for inválida
+    }
+    console.log('Data convertida de created_at:', createdAtDate);
+
     // Limpar o conteúdo existente antes de adicionar novos cards
     distanceResult.innerHTML = '';
 
-    // Exibir cada distância (local e remota)
-    data.forEach(item => {
-        const createdAtDate = new Date(item.created_at);
-        if (isNaN(createdAtDate)) {
-            console.error('Data inválida:', item.created_at);
-            return;
-        }
+    // Criando os dois cards (um para cada distância)
+    const localDistanceCard = document.createElement('div');
+    localDistanceCard.className = 'card shadow-sm mt-4'; // Estilo do card para a distância local
+    localDistanceCard.innerHTML = `
+        <div class="card-body text-center text-md-start">
+            <h5 class="card-title">Última Distância Local Registrada</h5>
+            <p class="card-text">
+                <strong>Distância Local:</strong> ${data.local_distance} m<br>
+                <strong>Data e Hora:</strong> ${createdAtDate.toLocaleString('pt-BR')}
+            </p>
+        </div>
+    `;
 
-        // Separando as distâncias local e remota (caso elas estejam combinadas)
-        const { local_distance, remote_distance } = item;
+    const remoteDistanceCard = document.createElement('div');
+    remoteDistanceCard.className = 'card shadow-sm mt-4'; // Estilo do card para a distância remota
+    remoteDistanceCard.innerHTML = `
+        <div class="card-body text-center text-md-start">
+            <h5 class="card-title">Última Distância Remota Registrada</h5>
+            <p class="card-text">
+                <strong>Distância Remota:</strong> ${data.remote_distance} m<br>
+                <strong>Data e Hora:</strong> ${createdAtDate.toLocaleString('pt-BR')}
+            </p>
+        </div>
+    `;
 
-        // Criando os cards para cada distância
-        const localDistanceCard = document.createElement('div');
-        localDistanceCard.className = 'card shadow-sm mt-4';
-        localDistanceCard.innerHTML = `
-            <div class="card-body text-center text-md-start">
-                <h5 class="card-title">Distância Local Registrada</h5>
-                <p class="card-text">
-                    <strong>Distância Local:</strong> ${local_distance} m<br>
-                    <strong>Data e Hora:</strong> ${createdAtDate.toLocaleString('pt-BR')}
-                </p>
-            </div>
-        `;
+    // Adicionando os dois cards ao elemento de distâncias
+    distanceResult.appendChild(localDistanceCard);
+    distanceResult.appendChild(remoteDistanceCard);
 
-        const remoteDistanceCard = document.createElement('div');
-        remoteDistanceCard.className = 'card shadow-sm mt-4';
-        remoteDistanceCard.innerHTML = `
-            <div class="card-body text-center text-md-start">
-                <h5 class="card-title">Distância Remota Registrada</h5>
-                <p class="card-text">
-                    <strong>Distância Remota:</strong> ${remote_distance} m<br>
-                    <strong>Data e Hora:</strong> ${createdAtDate.toLocaleString('pt-BR')}
-                </p>
-            </div>
-        `;
-
-        // Adicionando os cards ao elemento de distâncias
-        distanceResult.appendChild(localDistanceCard);
-        distanceResult.appendChild(remoteDistanceCard);
-
-        // Atualizando os gráficos com as novas distâncias
-        updateDistanceCharts(local_distance, remote_distance);
-    });
+    // Atualizando os gráficos com as novas distâncias
+    updateDistanceCharts(data.local_distance, data.remote_distance);
 
     // Verificando se os cards foram inseridos corretamente
     console.log('Cards inseridos com sucesso!');
@@ -165,9 +164,9 @@ function updateDistanceCharts(localDistance, remoteDistance) {
     // Se os gráficos ainda não foram inicializados, inicialize-os
     if (!localDistanceChart) {
         localDistanceChart = new Chart(document.getElementById('localDistanceChart'), {
-            type: 'line',
+            type: 'line', // Gráfico de linha
             data: {
-                labels: ['Agora'],
+                labels: ['Agora'], // Iniciar com uma única label
                 datasets: [{
                     label: 'Distância Local',
                     data: [localDistance],
@@ -178,7 +177,9 @@ function updateDistanceCharts(localDistance, remoteDistance) {
             options: {
                 responsive: true,
                 scales: {
-                    y: { beginAtZero: true }
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
         });
@@ -203,7 +204,9 @@ function updateDistanceCharts(localDistance, remoteDistance) {
             options: {
                 responsive: true,
                 scales: {
-                    y: { beginAtZero: true }
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
         });
@@ -214,7 +217,7 @@ function updateDistanceCharts(localDistance, remoteDistance) {
     }
 }
 
-// Chamar a função para buscar as últimas distâncias ao carregar a página
+// Chamar a função para buscar a última distância ao carregar a página
 fetchLastDistance();
 
 // Atualizar os dados a cada 10 segundos (10000 milissegundos)
